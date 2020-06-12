@@ -1,4 +1,10 @@
 package Java_GUI_Program;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,6 +14,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Base64.Decoder;
@@ -33,20 +40,22 @@ public class Hashing_Program extends JFrame {
 	JButton url_decode_btn = new JButton("URL Decode"); // URL 디코딩 버튼 생성
 	JButton hex_encode_btn = new JButton("HEX Encode"); // HEX 인코딩 버튼 생성
 	JButton hex_decode_btn = new JButton("HEX Decode"); // HEX 디코딩 버튼 생성
-	JButton md5_btn = new JButton("MD5"); // MD5 버튼 생성
 	JButton sha1_btn = new JButton("SHA-1"); // SHA-1 버튼 생성
-	JButton sha256_btn = new JButton("SHA-256"); // SHA-256 버튼 생성
-	JButton reverse_btn = new JButton("Reverse"); // Reverse 버튼 생성 
-	JButton factorization_btn = new JButton("Factorization"); // ASE 인코딩 버튼 생성
+	JButton sha256_btn = new JButton("SHA-256"); // SHA-256 해싱 버튼 생성
+	// AES-256는 자바 정책으로 라이브러리(US_export_policy.jar, local_policy.jar) 추가하셔야 컴파일 가능
+	JButton aes256_encrypt_btn = new JButton("AES-256 Encrypt"); // AES-256 암호화 생성
+	JButton aes256_decrypt_btn = new JButton("AES-256 Decrypt"); // AES-256 복호화 생성
+	JButton md5_btn = new JButton("MD5"); // MD5 버튼 생성
+	JButton factorization_btn = new JButton("Factorization"); // Factorization 인코딩 버튼 생성
 
 	public Hashing_Program() {
-		JFrame f = new JFrame("Hashing Program ver.200610"); // 프레임 생성
+		JFrame f = new JFrame("Hashing Program ver.200612"); // 프레임 생성
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 활성화
 		Container p = getContentPane(); // 패널 생성
 		p.setLayout(null);
 		
 		// ###########################################
-		// ############## 필드 작업 영역 ###############
+		// ############## 작업 영역 ###################
 		// ###########################################
 		
 		// 입력
@@ -72,7 +81,7 @@ public class Hashing_Program extends JFrame {
 		p.add(output_sp);
 		
 		// ###########################################
-		// ############## 인코딩 버튼 영역 ##############
+		// ############## 해싱 버튼 영역 ###############
 		// ###########################################
 		
 		// Base64
@@ -104,17 +113,21 @@ public class Hashing_Program extends JFrame {
 		sha256_btn.addActionListener(new ButtonListener());
 		sha256_btn.setBounds(600, 609, 200, 28);
 		p.add(sha256_btn);
+		// aes256_encryption_btn
+		aes256_encrypt_btn.addActionListener(new ButtonListener());
+		aes256_encrypt_btn.setBounds(800, 580, 200, 28);
+		p.add(aes256_encrypt_btn);
+		// aes256_decryption_btn
+		aes256_decrypt_btn.addActionListener(new ButtonListener());
+		aes256_decrypt_btn.setBounds(800, 609, 200, 28);
+		p.add(aes256_decrypt_btn);
 		// MD5
 		md5_btn.addActionListener(new ButtonListener());
-		md5_btn.setBounds(800, 580, 200, 28);
+		md5_btn.setBounds(1000, 580, 200, 28);
 		p.add(md5_btn);
-		// Reverse
-		reverse_btn.addActionListener(new ButtonListener());
-		reverse_btn.setBounds(800, 609, 200, 28);
-		p.add(reverse_btn);
 		// Factorization
 		factorization_btn.addActionListener(new ButtonListener());
-		factorization_btn.setBounds(1000, 580, 200, 28);
+		factorization_btn.setBounds(1000, 609, 200, 28);
 		p.add(factorization_btn);
 		
 		f.add(p); // 프레임에 패널 주입
@@ -123,7 +136,7 @@ public class Hashing_Program extends JFrame {
 	}
 	
 	// ###########################################
-	// ############## 인코딩 작업 영역 ##############
+	// ############## 해싱 작업 영역 ###############
 	// ###########################################
 	
 	class ButtonListener implements ActionListener { 
@@ -134,52 +147,51 @@ public class Hashing_Program extends JFrame {
 			if(e.getSource().equals(base64_encode_btn)) {
 				byte[] targetBytes = input_value.getBytes();
 				Encoder encoder = Base64.getEncoder();
-				byte[] encode_value = encoder.encode(targetBytes);
-				output_ta.setText(new String(encode_value));
+				byte[] base64_encode_value = encoder.encode(targetBytes);
+				output_ta.setText(new String(base64_encode_value));
 			
 			// base64_decode_btn
 			} else if(e.getSource().equals(base64_decode_btn)) {
 				byte[] targetBytes = input_value.getBytes();
 				Decoder decoder = Base64.getDecoder();
-				byte[] decode_value = decoder.decode(targetBytes);
-				output_ta.setText(new String(decode_value));
+				byte[] base64_decode_value = decoder.decode(targetBytes);
+				output_ta.setText(new String(base64_decode_value));
 			
 			// url_encode_btn
 			} else if(e.getSource().equals(url_encode_btn)) {
-				String encode_value = null;
+				String url_encode_value = null;
 				try {
-					encode_value = URLEncoder.encode(input_value, "UTF-8");
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
+					url_encode_value = URLEncoder.encode(input_value, "UTF-8");
+				} catch (UnsupportedEncodingException e_url) {
+					e_url.printStackTrace();
 				}
-				output_ta.setText(new String(encode_value));
+				output_ta.setText(new String(url_encode_value));
 				
 			// url_decode_btn
 			} else if(e.getSource().equals(url_decode_btn)) {
-				String decode_value = null;
+				String url_decode_value = null;
 				try {
-					decode_value = URLDecoder.decode(input_value, "UTF-8");
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
+					url_decode_value = URLDecoder.decode(input_value, "UTF-8");
+				} catch (UnsupportedEncodingException e_url) {
+					e_url.printStackTrace();
 				}
-				output_ta.setText(new String(decode_value));
+				output_ta.setText(new String(url_decode_value));
 				
 			// hex_encode_btn
 			} else if(e.getSource().equals(hex_encode_btn)) {
-				String encode_value = "";
+				String hex_encode_value = "";
 				for (int i = 0; i < input_value.length(); i++) {
-					encode_value += String.format("%02X", (int) input_value.charAt(i));
+					hex_encode_value += String.format("%02X", (int) input_value.charAt(i));
 				}
-				output_ta.setText(new String(encode_value));
+				output_ta.setText(new String(hex_encode_value));
 				
 			// hex_decode_btn
 			} else if(e.getSource().equals(hex_decode_btn)) {
 				final int RADIX = 16;
-				String hexStr = input_value;
-				String decode_value = new String((new BigInteger(hexStr, RADIX)).toByteArray());
-				output_ta.setText(new String(decode_value));
+				String hex_decode_value = new String((new BigInteger(input_value, RADIX)).toByteArray());
+				output_ta.setText(new String(hex_decode_value));
 			
-			// MD5
+			// md5_btn
 			} else if(e.getSource().equals(md5_btn)) {
 				String encode_value = ""; 
 				try{
@@ -197,7 +209,7 @@ public class Hashing_Program extends JFrame {
 				}
 				output_ta.setText(new String(encode_value));
 				
-			// SHA-1
+			// sha1_btn
 			} else if(e.getSource().equals(sha1_btn)) {
 				try {
 		            MessageDigest md = MessageDigest.getInstance("SHA-1"); 
@@ -213,9 +225,9 @@ public class Hashing_Program extends JFrame {
 		            throw new RuntimeException(e_sha1); 
 		        }
 				
-			// SHA-256
+			// sha256_btn
 			} else if(e.getSource().equals(sha256_btn)) {
-				String encode_value = ""; 
+				String sha256_hash_value = ""; 
 				try{
 					MessageDigest sh = MessageDigest.getInstance("SHA-256"); 
 					sh.update(input_value.getBytes()); 
@@ -224,36 +236,91 @@ public class Hashing_Program extends JFrame {
 					for(int i = 0 ; i < byteData.length ; i++){
 						sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
 					}
-					encode_value = sb.toString();
+					sha256_hash_value = sb.toString();
 				}catch(NoSuchAlgorithmException e_sha256){
 					e_sha256.printStackTrace(); 
-					encode_value = null; 
+					sha256_hash_value = null; 
 				}
-				output_ta.setText(new String(encode_value));
-
-			// reverse
-			} else if(e.getSource().equals(reverse_btn)) {
-				String encode_value = new StringBuilder(input_value).reverse().toString();
-				output_ta.setText(new String(encode_value));
+				output_ta.setText(new String(sha256_hash_value));
 				
 			// factorization_btn	
 			} else if(e.getSource().equals(factorization_btn)) {
 		        long n = Long.parseLong(input_value);
-		        output_ta.setText("");
 		        while (n > 1) {
 		            for (long i = 2; i <= n; i++) {
 		                if (n % i == 0) {
-		                	String encode_value = String.valueOf(i);
-		                    output_ta.setText(new String(encode_value+"\n"+output_ta.getText()));
+		                	String factorization_hash_value = String.valueOf(i);
+		                    output_ta.setText(new String(factorization_hash_value + "\n" + output_ta.getText()));
 		                    n = n / i;
 		                    break;
 		                }
 		            }
 		        }
+		     
+		    // aes256_encrypt_btn
+			} else if(e.getSource().equals(aes256_encrypt_btn)) {
+				 String encryptedString = aes256_encrypt(input_value, secretKey);
+				 output_ta.setText(new String(encryptedString));
+				 
+			// aes256_decrypt_btn
+			} else if(e.getSource().equals(aes256_decrypt_btn)) {
+				String decryptedString = aes256_decrypt(input_value, secretKey);
+				output_ta.setText(new String(decryptedString));
 			}
 		}
 	}
+	
+	// #######################################
+	// ############## 함수 영역 ###############
+	// #######################################
+	
+	// AES-256
+	private static String secretKey = "boooooooooom!!!!";
+    private static String salt = "ssshhhhhhhhhhh!!!!";
+    public static String aes256_encrypt(String strToEncrypt, String secret) 
+    {
+        try
+        {
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+             
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), salt.getBytes(), 65536, 256);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+             
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+        } 
+        catch (Exception e_aes256_encrypt) 
+        {
+            System.out.println("Error while encrypting: " + e_aes256_encrypt.toString());
+        }
+        return null;
+    }
 
+    public static String aes256_decrypt(String strToDecrypt, String secret) {
+        try
+        {
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+             
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), salt.getBytes(), 65536, 256);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+             
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+        } 
+        catch (Exception aes256_decrypt) {
+            System.out.println("Error while decrypting: " + aes256_decrypt.toString());
+        }
+        return null;
+    }
+	
 	// #############################################
 	// ################# main 영역 #################
 	// #############################################
