@@ -19,7 +19,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Base64.Decoder;
 
-public class Hashing_Program extends JFrame {
+public class Hashing_Program extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 	
 	// ###########################################
@@ -29,10 +29,12 @@ public class Hashing_Program extends JFrame {
 	JLabel input_lb = new JLabel("Input"); // 입력 라벨 생성
 	JTextArea input_ta = new JTextArea(); // 입력 텍스트 영역 생성
 	JScrollPane input_sp = new JScrollPane(input_ta); // 입력 스크롤 생성
+	JLabel input_length_lb = new JLabel("(length: 0)"); // 입력 길이 라벨 생성
 	
 	JLabel output_lb = new JLabel("Ouput"); // 출력 라벨 생성
 	JTextArea output_ta = new JTextArea(); // 출력 텍스트 영역 생성
 	JScrollPane output_sp = new JScrollPane(output_ta); // 출력 스크롤 생성
+	JLabel output_length_lb = new JLabel("(length: 0)"); // 출력 길이 라벨 생성
 	
 	JButton base64_encode_btn = new JButton("Base64 Encode"); // Base64 인코딩 버튼 생성
 	JButton base64_decode_btn = new JButton("Base64 Decode"); // Base64 디코딩 버튼 생성
@@ -59,6 +61,10 @@ public class Hashing_Program extends JFrame {
 		// ###########################################
 		
 		// 입력
+		input_length_lb.setBounds(55, 0, 400, 30);
+		input_length_lb.setOpaque(false);
+		input_length_lb.setFont(input_length_lb.getFont().deriveFont(20f));
+		p.add(input_length_lb);
 		input_lb.setBounds(0, 0, 600, 30);
 		input_lb.setOpaque(true);
 		input_lb.setBackground(Color.white);
@@ -66,16 +72,21 @@ public class Hashing_Program extends JFrame {
 		p.add(input_lb);
 		input_ta.setLineWrap(true); // 가로 폭 유지 (스크롤 내려가기만 하도록)
 		input_ta.setFont(new Font("Gothic", Font.BOLD, 15)); // 출력 폰트
+		input_ta.addKeyListener(this); // 키보드 리스너
 		input_sp.setBounds(0, 30, 600, 550);
 		p.add(input_sp);
-		
+
 		// 출력
+		output_length_lb.setBounds(665, 0, 400, 30);
+		output_length_lb.setOpaque(false);
+		output_length_lb.setFont(output_length_lb.getFont().deriveFont(20f));
+		p.add(output_length_lb);
 		output_lb.setBounds(600, 0, 600, 30);
 		output_lb.setOpaque(true);
 		output_lb.setBackground(Color.white);
 		output_lb.setFont(input_lb.getFont().deriveFont(20f));
 		p.add(output_lb);
-		input_ta.setLineWrap(true); // 가로 폭 유지 (스크롤 내려가기만 하도록)
+		output_ta.setLineWrap(true); // 가로 폭 유지 (스크롤 내려가기만 하도록)
 		output_ta.setFont(new Font("Gothic", Font.BOLD, 15)); // 출력 폰트
 		output_sp.setBounds(600, 30, 600, 550);
 		p.add(output_sp);
@@ -87,6 +98,7 @@ public class Hashing_Program extends JFrame {
 		// Base64
 		base64_encode_btn.addActionListener(new ButtonListener());
 		base64_encode_btn.setBounds(0, 580, 200, 28);
+		base64_encode_btn.addKeyListener(this);
 		p.add(base64_encode_btn);
 		base64_decode_btn.addActionListener(new ButtonListener());
 		base64_decode_btn.setBounds(0, 609, 200, 28);
@@ -105,22 +117,22 @@ public class Hashing_Program extends JFrame {
 		hex_decode_btn.addActionListener(new ButtonListener());
 		hex_decode_btn.setBounds(400, 609, 200, 28);
 		p.add(hex_decode_btn);
-		// SHA-1
-		sha1_btn.addActionListener(new ButtonListener());
-		sha1_btn.setBounds(600, 580, 200, 28);
-		p.add(sha1_btn);
-		// SHA-256
-		sha256_btn.addActionListener(new ButtonListener());
-		sha256_btn.setBounds(600, 609, 200, 28);
-		p.add(sha256_btn);
 		// aes256_encryption_btn
 		aes256_encrypt_btn.addActionListener(new ButtonListener());
-		aes256_encrypt_btn.setBounds(800, 580, 200, 28);
+		aes256_encrypt_btn.setBounds(600, 580, 200, 28);
 		p.add(aes256_encrypt_btn);
 		// aes256_decryption_btn
 		aes256_decrypt_btn.addActionListener(new ButtonListener());
-		aes256_decrypt_btn.setBounds(800, 609, 200, 28);
+		aes256_decrypt_btn.setBounds(600, 609, 200, 28);
 		p.add(aes256_decrypt_btn);
+		// SHA-1
+		sha1_btn.addActionListener(new ButtonListener());
+		sha1_btn.setBounds(800, 580, 200, 28);
+		p.add(sha1_btn);
+		// SHA-256
+		sha256_btn.addActionListener(new ButtonListener());
+		sha256_btn.setBounds(800, 609, 200, 28);
+		p.add(sha256_btn);
 		// MD5
 		md5_btn.addActionListener(new ButtonListener());
 		md5_btn.setBounds(1000, 580, 200, 28);
@@ -131,8 +143,13 @@ public class Hashing_Program extends JFrame {
 		p.add(factorization_btn);
 		
 		f.add(p); // 프레임에 패널 주입
-		f.setSize(1215,675);
+		f.setSize(1215,675); // 16대9 비율
 		f.setVisible(true); // 생성
+	}
+	
+	// 키보드 입력마다 텍스트 필드 길이 측정
+	public void keyReleased(KeyEvent e) {
+		input_length_lb.setText(new String("(length: "+Integer.toString(input_ta.getText().length())+")"));
 	}
 	
 	// ###########################################
@@ -144,7 +161,7 @@ public class Hashing_Program extends JFrame {
 			String input_value = input_ta.getText();
 			
 			// base64_encode_btn
-			if(e.getSource().equals(base64_encode_btn)) {
+			if(e.getSource().equals(base64_encode_btn)) {		
 				byte[] targetBytes = input_value.getBytes();
 				Encoder encoder = Base64.getEncoder();
 				byte[] base64_encode_value = encoder.encode(targetBytes);
@@ -245,6 +262,7 @@ public class Hashing_Program extends JFrame {
 				
 			// factorization_btn	
 			} else if(e.getSource().equals(factorization_btn)) {
+				output_ta.setText("");
 		        long n = Long.parseLong(input_value);
 		        while (n > 1) {
 		            for (long i = 2; i <= n; i++) {
@@ -267,6 +285,8 @@ public class Hashing_Program extends JFrame {
 				String decryptedString = aes256_decrypt(input_value, secretKey);
 				output_ta.setText(new String(decryptedString));
 			}
+			
+			output_length_lb.setText(new String("(length: "+Integer.toString(output_ta.getText().length())+")")); // 버튼 눌렸을때 길이 출력 길이 측정
 		}
 	}
 	
@@ -327,5 +347,17 @@ public class Hashing_Program extends JFrame {
 	
 	public static void main(String[] args) {
 		new Hashing_Program();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
