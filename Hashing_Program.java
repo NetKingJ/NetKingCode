@@ -22,78 +22,84 @@ import java.util.Base64.Decoder;
 public class Hashing_Program extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 	
-	// ###########################################
-	// ############## ÀÛ¾÷ »ı¼º ¿µ¿ª ###############
-	// ###########################################
+	// ==========================================
+	// ============== ì‘ì—… ìƒì„± ì˜ì—­ ==============
+	// ==========================================
 		
-	JLabel input_lb = new JLabel("Input"); // ÀÔ·Â ¶óº§ »ı¼º
-	JTextArea input_ta = new JTextArea(); // ÀÔ·Â ÅØ½ºÆ® ¿µ¿ª »ı¼º
-	JScrollPane input_sp = new JScrollPane(input_ta); // ÀÔ·Â ½ºÅ©·Ñ »ı¼º
-	JLabel input_length_lb = new JLabel("(length: 0)"); // ÀÔ·Â ±æÀÌ ¶óº§ »ı¼º
+	JLabel input_lb = new JLabel("Input"); // ì…ë ¥ ë¼ë²¨ ìƒì„±
+	JTextArea input_ta = new JTextArea(); // ì…ë ¥ í…ìŠ¤íŠ¸ ì˜ì—­ ìƒì„±
+	JScrollPane input_sp = new JScrollPane(input_ta); // ì…ë ¥ ìŠ¤í¬ë¡¤ ìƒì„±
+	JLabel input_length_lb = new JLabel("(length: 0)"); // ì…ë ¥ ê¸¸ì´ ë¼ë²¨ ìƒì„±
 	
-	JLabel output_lb = new JLabel("Ouput"); // Ãâ·Â ¶óº§ »ı¼º
-	JTextArea output_ta = new JTextArea(); // Ãâ·Â ÅØ½ºÆ® ¿µ¿ª »ı¼º
-	JScrollPane output_sp = new JScrollPane(output_ta); // Ãâ·Â ½ºÅ©·Ñ »ı¼º
-	JLabel output_length_lb = new JLabel("(length: 0)"); // Ãâ·Â ±æÀÌ ¶óº§ »ı¼º
+	JLabel output_lb = new JLabel("Ouput"); // ì¶œë ¥ ë¼ë²¨ ìƒì„±
+	static JTextArea output_ta = new JTextArea(); // ì¶œë ¥ í…ìŠ¤íŠ¸ ì˜ì—­ ìƒì„±
+	JScrollPane output_sp = new JScrollPane(output_ta); // ì¶œë ¥ ìŠ¤í¬ë¡¤ ìƒì„±
+	JLabel output_length_lb = new JLabel("(length: 0)"); // ì¶œë ¥ ê¸¸ì´ ë¼ë²¨ ìƒì„±
 	
-	JButton base64_encode_btn = new JButton("Base64 Encode"); // Base64 ÀÎÄÚµù ¹öÆ° »ı¼º
-	JButton base64_decode_btn = new JButton("Base64 Decode"); // Base64 µğÄÚµù ¹öÆ° »ı¼º
-	JButton url_encode_btn = new JButton("URL Encode"); // URL ÀÎÄÚµù ¹öÆ° »ı¼º
-	JButton url_decode_btn = new JButton("URL Decode"); // URL µğÄÚµù ¹öÆ° »ı¼º
-	JButton hex_encode_btn = new JButton("HEX Encode"); // HEX ÀÎÄÚµù ¹öÆ° »ı¼º
-	JButton hex_decode_btn = new JButton("HEX Decode"); // HEX µğÄÚµù ¹öÆ° »ı¼º
-	JButton sha1_btn = new JButton("SHA-1"); // SHA-1 ¹öÆ° »ı¼º
-	JButton sha256_btn = new JButton("SHA-256"); // SHA-256 ÇØ½Ì ¹öÆ° »ı¼º
-	// AES-256´Â ÀÚ¹Ù Á¤Ã¥À¸·Î ¶óÀÌºê·¯¸®(US_export_policy.jar, local_policy.jar) Ãß°¡ÇÏ¼Å¾ß ÄÄÆÄÀÏ °¡´É
-	JButton aes256_encrypt_btn = new JButton("AES-256 Encrypt"); // AES-256 ¾ÏÈ£È­ »ı¼º
-	JButton aes256_decrypt_btn = new JButton("AES-256 Decrypt"); // AES-256 º¹È£È­ »ı¼º
-	JButton md5_btn = new JButton("MD5"); // MD5 ¹öÆ° »ı¼º
-	JButton factorization_btn = new JButton("Factorization"); // Factorization ÀÎÄÚµù ¹öÆ° »ı¼º
+	JButton base64_encode_btn = new JButton("Base64 Encode"); // Base64 ì¸ì½”ë”© ë²„íŠ¼ ìƒì„±
+	JButton base64_decode_btn = new JButton("Base64 Decode"); // Base64 ë””ì½”ë”© ë²„íŠ¼ ìƒì„±
+	JButton url_encode_btn = new JButton("URL Encode"); // URL ì¸ì½”ë”© ë²„íŠ¼ ìƒì„±
+	JButton url_decode_btn = new JButton("URL Decode"); // URL ë””ì½”ë”© ë²„íŠ¼ ìƒì„±
+	JButton hex_encode_btn = new JButton("HEX Encode"); // HEX ì¸ì½”ë”© ë²„íŠ¼ ìƒì„±
+	JButton hex_decode_btn = new JButton("HEX Decode"); // HEX ë””ì½”ë”© ë²„íŠ¼ ìƒì„±
+	JButton sha1_btn = new JButton("SHA-1"); // SHA-1 ë²„íŠ¼ ìƒì„±
+	JButton sha256_btn = new JButton("SHA-256"); // SHA-256 í•´ì‹± ë²„íŠ¼ ìƒì„±
+	// AES-256ëŠ” ìë°” ì •ì±…ìœ¼ë¡œ ë¼ì´ë¸ŒëŸ¬ë¦¬(US_export_policy.jar, local_policy.jar) ì¶”ê°€í•˜ì…”ì•¼ ì»´íŒŒì¼ ê°€ëŠ¥
+	JButton aes256_encrypt_btn = new JButton("AES-256 Encrypt"); // AES-256 ì•”í˜¸í™” ìƒì„±
+	JButton aes256_decrypt_btn = new JButton("AES-256 Decrypt"); // AES-256 ë³µí˜¸í™” ìƒì„±
+	JButton md5_btn = new JButton("MD5"); // MD5 ë²„íŠ¼ ìƒì„±
+	JButton factorization_btn = new JButton("Factorization"); // Factorization ì¸ì½”ë”© ë²„íŠ¼ ìƒì„±
 
 	public Hashing_Program() {
-		JFrame f = new JFrame("Hashing Program ver.200612"); // ÇÁ·¹ÀÓ »ı¼º
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Á¾·á È°¼ºÈ­
-		Container p = getContentPane(); // ÆĞ³Î »ı¼º
+		JFrame f = new JFrame("Hashing Program ver.200627"); // í”„ë ˆì„ ìƒì„±
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ì¢…ë£Œ í™œì„±í™”
+		Container p = getContentPane(); // íŒ¨ë„ ìƒì„±
 		p.setLayout(null);
 		
-		// ###########################################
-		// ############## ÀÛ¾÷ ¿µ¿ª ###################
-		// ###########################################
+		// ======================================
+		// ============== ì‘ì—… ì˜ì—­ ==============
+		// ======================================
 		
-		// ÀÔ·Â
+		// ì…ë ¥
+		// ì…ë ¥ ê¸¸ì´
 		input_length_lb.setBounds(55, 0, 400, 30);
 		input_length_lb.setOpaque(false);
 		input_length_lb.setFont(input_length_lb.getFont().deriveFont(20f));
 		p.add(input_length_lb);
+		// ì…ë ¥ ë¼ë²¨
 		input_lb.setBounds(0, 0, 600, 30);
 		input_lb.setOpaque(true);
 		input_lb.setBackground(Color.white);
 		input_lb.setFont(input_lb.getFont().deriveFont(20f));
 		p.add(input_lb);
-		input_ta.setLineWrap(true); // °¡·Î Æø À¯Áö (½ºÅ©·Ñ ³»·Á°¡±â¸¸ ÇÏµµ·Ï)
-		input_ta.setFont(new Font("Gothic", Font.BOLD, 15)); // Ãâ·Â ÆùÆ®
-		input_ta.addKeyListener(this); // Å°º¸µå ¸®½º³Ê
+		// ì…ë ¥ í…Œì´ë¸”
+		input_ta.setLineWrap(true); // ê°€ë¡œ í­ ìœ ì§€ (ìŠ¤í¬ë¡¤ ë‚´ë ¤ê°€ê¸°ë§Œ í•˜ë„ë¡)
+		input_ta.setFont(new Font("Gothic", Font.BOLD, 15)); // ì¶œë ¥ í°íŠ¸
+		input_ta.addKeyListener(this); // í‚¤ë³´ë“œ ë¦¬ìŠ¤ë„ˆ
 		input_sp.setBounds(0, 30, 600, 550);
 		p.add(input_sp);
 
-		// Ãâ·Â
+		// ì¶œë ¥
+		// ì¶œë ¥ ê¸¸ì´
 		output_length_lb.setBounds(665, 0, 400, 30);
 		output_length_lb.setOpaque(false);
 		output_length_lb.setFont(output_length_lb.getFont().deriveFont(20f));
 		p.add(output_length_lb);
+		// ì¶œë ¥ ë¼ë²¨
 		output_lb.setBounds(600, 0, 600, 30);
 		output_lb.setOpaque(true);
 		output_lb.setBackground(Color.white);
 		output_lb.setFont(input_lb.getFont().deriveFont(20f));
 		p.add(output_lb);
-		output_ta.setLineWrap(true); // °¡·Î Æø À¯Áö (½ºÅ©·Ñ ³»·Á°¡±â¸¸ ÇÏµµ·Ï)
-		output_ta.setFont(new Font("Gothic", Font.BOLD, 15)); // Ãâ·Â ÆùÆ®
+		// ì¶œë ¥ í…Œì´ë¸”
+		output_ta.setLineWrap(true); // ê°€ë¡œ í­ ìœ ì§€ (ìŠ¤í¬ë¡¤ ë‚´ë ¤ê°€ê¸°ë§Œ í•˜ë„ë¡)
+		output_ta.setFont(new Font("Gothic", Font.BOLD, 15)); // ì¶œë ¥ í°íŠ¸
 		output_sp.setBounds(600, 30, 600, 550);
 		p.add(output_sp);
 		
-		// ###########################################
-		// ############## ÇØ½Ì ¹öÆ° ¿µ¿ª ###############
-		// ###########################################
+		// ==========================================
+		// ============== í•´ì‹± ë²„íŠ¼ ì˜ì—­ ==============
+		// ==========================================
 		
 		// Base64
 		base64_encode_btn.addActionListener(new ButtonListener());
@@ -142,161 +148,187 @@ public class Hashing_Program extends JFrame implements KeyListener {
 		factorization_btn.setBounds(1000, 609, 200, 28);
 		p.add(factorization_btn);
 		
-		f.add(p); // ÇÁ·¹ÀÓ¿¡ ÆĞ³Î ÁÖÀÔ
-		f.setSize(1215,675); // 16´ë9 ºñÀ²
-		f.setVisible(true); // »ı¼º
+		f.add(p); // í”„ë ˆì„ì— íŒ¨ë„ ì£¼ì…
+		f.setSize(1215,675); // 16ëŒ€9 ë¹„ìœ¨
+		f.setResizable(false); // ì°½ ê³ ì •
+		f.setVisible(true); // ìƒì„±
 	}
 	
-	// Å°º¸µå ÀÔ·Â¸¶´Ù ÅØ½ºÆ® ÇÊµå ±æÀÌ ÃøÁ¤
+	// í‚¤ë³´ë“œ ì…ë ¥ë§ˆë‹¤ í…ìŠ¤íŠ¸ í•„ë“œ ê¸¸ì´ ì¸¡ì •
 	public void keyReleased(KeyEvent e) {
 		input_length_lb.setText(new String("(length: "+Integer.toString(input_ta.getText().length())+")"));
 	}
 	
-	// ###########################################
-	// ############## ÇØ½Ì ÀÛ¾÷ ¿µ¿ª ###############
-	// ###########################################
+	// ==========================================
+	// ============== í•´ì‹± ì‘ì—… ì˜ì—­ ==============
+	// ==========================================
 	
 	class ButtonListener implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
-			String input_value = input_ta.getText();
+			String input_value = input_ta.getText(); // ì…ëŸ­ í…Œì´ë¸”ì—ì„œ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+			output_ta.setText(""); // ì¶œë ¥ í…Œì´ë¸” ì§€ìš°ê¸°
 			
-			// base64_encode_btn
-			if(e.getSource().equals(base64_encode_btn)) {		
-				byte[] targetBytes = input_value.getBytes();
-				Encoder encoder = Base64.getEncoder();
-				byte[] base64_encode_value = encoder.encode(targetBytes);
-				output_ta.setText(new String(base64_encode_value));
-			
-			// base64_decode_btn
-			} else if(e.getSource().equals(base64_decode_btn)) {
-				byte[] targetBytes = input_value.getBytes();
-				Decoder decoder = Base64.getDecoder();
-				byte[] base64_decode_value = decoder.decode(targetBytes);
-				output_ta.setText(new String(base64_decode_value));
-			
-			// url_encode_btn
-			} else if(e.getSource().equals(url_encode_btn)) {
-				String url_encode_value = null;
-				try {
-					url_encode_value = URLEncoder.encode(input_value, "UTF-8");
-				} catch (UnsupportedEncodingException e_url) {
-					e_url.printStackTrace();
-				}
-				output_ta.setText(new String(url_encode_value));
+			if(input_value.equals("")) { // ì…ë ¥ ê°’ì´ ì—†ì„ ê²½ìš°
+				output_ta.setText(new String("ì…ë ¥ ê°’ì´ ì—†ìŠµë‹ˆë‹¤"));
+			} else {
+				// base64_encode_btn
+				if(e.getSource().equals(base64_encode_btn)) {
+					byte[] targetBytes = input_value.getBytes();
+					Encoder encoder = Base64.getEncoder();
+					byte[] base64_encode_value = encoder.encode(targetBytes);
+					output_ta.setText(new String(base64_encode_value));
+					
+				// base64_decode_btn
+				} else if(e.getSource().equals(base64_decode_btn)) {
+					byte[] targetBytes = input_value.getBytes();
+					Decoder decoder = Base64.getDecoder();
+					byte[] base64_decode_value = decoder.decode(targetBytes);
+					output_ta.setText(new String(base64_decode_value));
 				
-			// url_decode_btn
-			} else if(e.getSource().equals(url_decode_btn)) {
-				String url_decode_value = null;
-				try {
-					url_decode_value = URLDecoder.decode(input_value, "UTF-8");
-				} catch (UnsupportedEncodingException e_url) {
-					e_url.printStackTrace();
-				}
-				output_ta.setText(new String(url_decode_value));
-				
-			// hex_encode_btn
-			} else if(e.getSource().equals(hex_encode_btn)) {
-				String hex_encode_value = "";
-				for (int i = 0; i < input_value.length(); i++) {
-					hex_encode_value += String.format("%02X", (int) input_value.charAt(i));
-				}
-				output_ta.setText(new String(hex_encode_value));
-				
-			// hex_decode_btn
-			} else if(e.getSource().equals(hex_decode_btn)) {
-				final int RADIX = 16;
-				String hex_decode_value = new String((new BigInteger(input_value, RADIX)).toByteArray());
-				output_ta.setText(new String(hex_decode_value));
-			
-			// md5_btn
-			} else if(e.getSource().equals(md5_btn)) {
-				String encode_value = ""; 
-				try{
-					MessageDigest md = MessageDigest.getInstance("MD5"); 
-					md.update(input_value.getBytes()); 
-					byte byteData[] = md.digest();
-					StringBuffer sb = new StringBuffer(); 
-					for(int i = 0 ; i < byteData.length ; i++){
-						sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+				// url_encode_btn
+				} else if(e.getSource().equals(url_encode_btn)) {
+					String url_encode_value = null;
+					try {
+						url_encode_value = URLEncoder.encode(input_value, "UTF-8");
+					} catch (UnsupportedEncodingException e_url) {
+						e_url.printStackTrace();
 					}
-					encode_value = sb.toString();
-				}catch(NoSuchAlgorithmException e_md5){
-					e_md5.printStackTrace(); 
-					encode_value = null;
-				}
-				output_ta.setText(new String(encode_value));
-				
-			// sha1_btn
-			} else if(e.getSource().equals(sha1_btn)) {
-				try {
-		            MessageDigest md = MessageDigest.getInstance("SHA-1"); 
-		            byte[] messageDigest = md.digest(input_value.getBytes());
-		            BigInteger no = new BigInteger(1, messageDigest);
-		            String encode_value = no.toString(16);
-		            while (encode_value.length() < 32) { 
-		            	encode_value = "0" + encode_value; 
-		            }
-		            output_ta.setText(new String(encode_value));
-		        }
-		        catch (NoSuchAlgorithmException e_sha1) { 
-		            throw new RuntimeException(e_sha1); 
-		        }
-				
-			// sha256_btn
-			} else if(e.getSource().equals(sha256_btn)) {
-				String sha256_hash_value = ""; 
-				try{
-					MessageDigest sh = MessageDigest.getInstance("SHA-256"); 
-					sh.update(input_value.getBytes()); 
-					byte byteData[] = sh.digest();
-					StringBuffer sb = new StringBuffer(); 
-					for(int i = 0 ; i < byteData.length ; i++){
-						sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+					output_ta.setText(new String(url_encode_value));
+					
+				// url_decode_btn
+				} else if(e.getSource().equals(url_decode_btn)) {
+					String url_decode_value = null;
+					try {
+						url_decode_value = URLDecoder.decode(input_value, "UTF-8");
+					} catch (UnsupportedEncodingException e_url) {
+						e_url.printStackTrace();
 					}
-					sha256_hash_value = sb.toString();
-				}catch(NoSuchAlgorithmException e_sha256){
-					e_sha256.printStackTrace(); 
-					sha256_hash_value = null; 
-				}
-				output_ta.setText(new String(sha256_hash_value));
+					output_ta.setText(new String(url_decode_value));
+					
+				// hex_encode_btn
+				} else if(e.getSource().equals(hex_encode_btn)) {
+					String hex_encode_value = "";
+					for (int i = 0; i < input_value.length(); i++) {
+						hex_encode_value += String.format("%02X", (int) input_value.charAt(i));
+					}
+					output_ta.setText(new String(hex_encode_value));
+					
+				// hex_decode_btn
+				} else if(e.getSource().equals(hex_decode_btn)) {
+					final int RADIX = 16;
+					String hex_decode_value = new String((new BigInteger(input_value, RADIX)).toByteArray());
+					output_ta.setText(new String(hex_decode_value));
 				
-			// factorization_btn	
-			} else if(e.getSource().equals(factorization_btn)) {
-				output_ta.setText("");
-		        long n = Long.parseLong(input_value);
-		        while (n > 1) {
-		            for (long i = 2; i <= n; i++) {
-		                if (n % i == 0) {
-		                	String factorization_hash_value = String.valueOf(i);
-		                    output_ta.setText(new String(factorization_hash_value + "\n" + output_ta.getText()));
-		                    n = n / i;
-		                    break;
-		                }
-		            }
-		        }
-		     
-		    // aes256_encrypt_btn
-			} else if(e.getSource().equals(aes256_encrypt_btn)) {
-				 String encryptedString = aes256_encrypt(input_value, secretKey);
-				 output_ta.setText(new String(encryptedString));
-				 
-			// aes256_decrypt_btn
-			} else if(e.getSource().equals(aes256_decrypt_btn)) {
-				String decryptedString = aes256_decrypt(input_value, secretKey);
-				output_ta.setText(new String(decryptedString));
+				// md5_btn
+				} else if(e.getSource().equals(md5_btn)) {
+					String encode_value = ""; 
+					try{
+						MessageDigest md = MessageDigest.getInstance("MD5"); 
+						md.update(input_value.getBytes()); 
+						byte byteData[] = md.digest();
+						StringBuffer sb = new StringBuffer(); 
+						for(int i = 0 ; i < byteData.length ; i++){
+							sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+						}
+						encode_value = sb.toString();
+					}catch(NoSuchAlgorithmException e_md5){
+						e_md5.printStackTrace(); 
+						encode_value = null;
+					}
+					output_ta.setText(new String(encode_value));
+					
+				// sha1_btn
+				} else if(e.getSource().equals(sha1_btn)) {
+					try {
+			            MessageDigest md = MessageDigest.getInstance("SHA-1"); 
+			            byte[] messageDigest = md.digest(input_value.getBytes());
+			            BigInteger no = new BigInteger(1, messageDigest);
+			            String encode_value = no.toString(16);
+			            while (encode_value.length() < 32) { 
+			            	encode_value = "0" + encode_value; 
+			            }
+			            output_ta.setText(new String(encode_value));
+			        }
+			        catch (NoSuchAlgorithmException e_sha1) { 
+			            throw new RuntimeException(e_sha1); 
+			        }
+					
+				// sha256_btn
+				} else if(e.getSource().equals(sha256_btn)) {
+					String sha256_hash_value = ""; 
+					try{
+						MessageDigest sh = MessageDigest.getInstance("SHA-256"); 
+						sh.update(input_value.getBytes()); 
+						byte byteData[] = sh.digest();
+						StringBuffer sb = new StringBuffer(); 
+						for(int i = 0 ; i < byteData.length ; i++){
+							sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+						}
+						sha256_hash_value = sb.toString();
+					}catch(NoSuchAlgorithmException e_sha256){
+						e_sha256.printStackTrace(); 
+						sha256_hash_value = null; 
+					}
+					output_ta.setText(new String(sha256_hash_value));
+					
+				// factorization_btn	
+				} else if(e.getSource().equals(factorization_btn)) {
+					//empty_value(input_value);
+					not_number_value(input_value);
+			        long n = Long.parseLong(input_value);
+			        while (n > 1) {
+			            for (long i = 2; i <= n; i++) {
+			                if (n % i == 0) {
+			                	String factorization_hash_value = String.valueOf(i);
+			                    output_ta.setText(new String(factorization_hash_value + "\n" + output_ta.getText()));
+			                    n = n / i;
+			                    break;
+			                }
+			            }
+			        }
+			     
+			    // aes256_encrypt_btn
+				} else if(e.getSource().equals(aes256_encrypt_btn)) {
+					 String encryptedString = aes256_encrypt(input_value, secretKey);
+					 output_ta.setText(new String(encryptedString));
+					 
+				// aes256_decrypt_btn
+				} else if(e.getSource().equals(aes256_decrypt_btn)) {
+					String decryptedString = aes256_decrypt(input_value, secretKey);
+					output_ta.setText(new String(decryptedString));
+				}
 			}
-			
-			output_length_lb.setText(new String("(length: "+Integer.toString(output_ta.getText().length())+")")); // ¹öÆ° ´­·ÈÀ»¶§ ±æÀÌ Ãâ·Â ±æÀÌ ÃøÁ¤
+
+			output_length_lb.setText(new String("(length: "+Integer.toString(output_ta.getText().length())+")")); // ë²„íŠ¼ ëˆŒë ¸ì„ë•Œ ê¸¸ì´ ì¶œë ¥ ê¸¸ì´ ì¸¡ì •
 		}
 	}
 	
-	// #######################################
-	// ############## ÇÔ¼ö ¿µ¿ª ###############
-	// #######################################
+	// ======================================
+	// ============== í•¨ìˆ˜ ì˜ì—­ ==============
+	// ======================================
 	
-	// AES-256
-	private static String secretKey = "boooooooooom!!!!";
-    private static String salt = "ssshhhhhhhhhhh!!!!";
+	// ì…ë ¥ê°’ì— ë°ì´í„°ê°€ ì—†ëŠ” ê²½ìš°
+	public static void empty_value(String input_value) {
+		if(input_value.equals("")) {
+			output_ta.setText(new String("ì…ë ¥ ê°’ì´ ì—†ìŠµë‹ˆë‹¤"));
+		}
+	}
+	
+	// ì…ë ¥ê°’ì´ ìˆ«ìê°€ ì•„ë‹Œ ê²½ìš°
+	public static void not_number_value(String input_value) {
+		for(int i=0; i<input_value.length(); i++) {
+			char c = input_value.charAt(i);
+			if(c<48 || c>57) {
+				output_ta.setText(new String("ìˆ«ìë§Œ ì…ë ¥í•˜ì„¸ìš”"));
+				break;
+			}
+		}
+	}
+	
+	// AES-256 ì•”í˜¸í™”/ë³µí˜¸í™”
+	private static String secretKey = "i_love_java!";
+    private static String salt = "oh_yessssss!!";
+    // AES-256 ì•”í˜¸í™”
     public static String aes256_encrypt(String strToEncrypt, String secret) 
     {
         try
@@ -319,7 +351,7 @@ public class Hashing_Program extends JFrame implements KeyListener {
         }
         return null;
     }
-
+    // AES-256 ë³µí˜¸í™”
     public static String aes256_decrypt(String strToDecrypt, String secret) {
         try
         {
@@ -340,24 +372,15 @@ public class Hashing_Program extends JFrame implements KeyListener {
         }
         return null;
     }
-	
-	// #############################################
-	// ################# main ¿µ¿ª #################
-	// #############################################
+    
+	// =======================================
+	// ============== main ì˜ì—­ ==============
+	// =======================================
 	
 	public static void main(String[] args) {
 		new Hashing_Program();
 	}
-
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
+	public void keyPressed(KeyEvent e) {}
 }
