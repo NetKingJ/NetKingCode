@@ -310,7 +310,7 @@ public class Hashing_Program extends JFrame implements KeyListener {
 	// 입력값에 데이터가 없는 경우
 	public static void empty_value(String input_value) {
 		if(input_value.equals("")) {
-			output_ta.setText(new String("입력 값이 없습니다"));
+			output_ta.setText(new String("입력값이 없습니다"));
 		}
 	}
 	
