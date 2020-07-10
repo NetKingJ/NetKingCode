@@ -51,7 +51,7 @@ public class Hashing_Program extends JFrame implements KeyListener {
 	JButton factorization_btn = new JButton("Factorization"); // Factorization 인코딩 버튼 생성
 
 	public Hashing_Program() {
-		JFrame f = new JFrame("Hashing Program ver.200627"); // 프레임 생성
+		JFrame f = new JFrame("NKHashing ver.200710"); // 프레임 생성
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 활성화
 		Container p = getContentPane(); // 패널 생성
 		p.setLayout(null);
